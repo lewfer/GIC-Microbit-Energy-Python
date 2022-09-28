@@ -7,4 +7,4 @@
 
 
 powerstation_serialport = "COM20"
-house_serialport = "COM11"
+house_serialport = "COM21"
