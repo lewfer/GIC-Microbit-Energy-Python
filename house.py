@@ -10,10 +10,6 @@ Reads available energy from the national grid and turns on whatever devices can 
 # Setup
 ###################################################################################################
 
-# Set the port that the house microbit is connected to
-# On windows go to device manager then ports
-# On Mac and linux, from a terminal type ls /dev/ttyACM*
-serialport = "COM7"
 
 # Define the devices we need to power
 devices = {"light":     {"power":100, "on":1, "powered":0}, 
@@ -34,12 +30,13 @@ import random
 import requests
 from microbit import *
 from utils import *
+from settings import *
 
 # Main
 ###################################################################################################
 
 # Object to connect to microbit
-microbit = Microbit(serialport)
+microbit = Microbit(house_serialport)
 microbit.connect()
 
 # Startup pygame window
@@ -102,9 +99,11 @@ while running:
     # Tell microbit which devices to turn on
     for i, key in enumerate(devices):
         if devices[key]["on"] and devices[key]["powered"]:
-            microbit.write(f"{key}=1\n")
+            message = f"{key}=1\n"
         else:
-            microbit.write(f"{key}=0\n")
+            message = f"{key}=0\n"
+        microbit.write(message)
+        print("Sending:",message)
 
     print(devices)
 

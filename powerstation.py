@@ -7,13 +7,7 @@ Also provides a UI to show what's happening in the powerstation.
 Reads energy from wind and solar and sends to the national grid.
 """
 
-# Setup
-###################################################################################################
 
-# Set the port that the house microbit is connected to
-# On windows go to device manager then ports
-# On Mac and linux, from a terminal type ls /dev/ttyACM*
-serialport = "COM20"
 
 # Imports
 ###################################################################################################
@@ -27,6 +21,7 @@ from time import sleep
 import requests
 from microbit import *
 from utils import *
+from settings import *
 
 
 # Main
@@ -37,7 +32,7 @@ dataWind = []
 dataSolar = []
 
 # Object to connect to microbit
-microbit = Microbit(serialport)
+microbit = Microbit(powerstation_serialport)
 microbit.connect()
 
 # Startup pygame window

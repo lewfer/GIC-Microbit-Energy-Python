@@ -2,13 +2,13 @@
 test
 """
 
+from settings import *
+
 # Setup
 ###################################################################################################
 
-# Set the port that the house microbit is connected to
-# On windows go to device manager then ports
-# On Mac and linux, from a terminal type ls /dev/ttyACM*
-serialport = "COM5"
+
+
 
 # Imports
 ###################################################################################################
@@ -26,7 +26,7 @@ from microbit import *
 
 
 # Object to connect to microbit
-microbit = Microbit(serialport)
+microbit = Microbit(powerstation_serialport)
 microbit.connect()
 
 # Run until the user asks to quit
