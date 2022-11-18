@@ -9,6 +9,7 @@ class Microbit():
         self.serial = serial.Serial(self.serialport, 9600,  parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE)
 
 
+
     def disconnect(self):
         self.serial.close()
 

@@ -78,7 +78,7 @@ def listen():
     while running:
         try:
             message = microbit.read()
-            print("new message",message)
+            #print("new message",message)
 
             if message=="clear":
                 # Clear all devices
@@ -106,7 +106,7 @@ def listen():
 
             elif (len(message)>0):
                 # Adding a new device
-                #print("Receive:",message)
+                print("Receive:",message)
                 split = message.split("=")
                 devices[split[0]] = {"name":split[0], "power_needed":int(split[1]), "on":0, "powered":0}
         except Exception as e:
@@ -115,14 +115,14 @@ def listen():
 
 def getTotalEnergy():
     # Find out how much energy is available at the national grid
-    url = "http://lewfer.pythonanywhere.com/gettotalenergy"
+    url = grid_url + "/gettotalenergy"
     response = requests.get(url)
     return int(response.json())
 
 def useEnergy(units):
     # Tell National Grid how much we used
     print(totalEnergyUsed)
-    url = f"http://lewfer.pythonanywhere.com/use?energy={units}"
+    url = grid_url + f"/use?energy={units}"
     response = requests.get(url)
     #print(response.json())
 

@@ -22,7 +22,7 @@ import requests
 from microbit import *
 from utils import *
 from settings import *
-
+import time
 
 # Main
 ###################################################################################################
@@ -71,6 +71,7 @@ while running:
     print(reading)
 
     # Decode the reading
+    
     if len(reading)>=7 and reading[0]=="#" and reading[-1]==".": # check we have a valid reading
         # Attempt to decode values
         try:
@@ -86,13 +87,17 @@ while running:
                 dataWind = dataWind[-144:]
                 dataSolar = dataSolar[-144:]
 
-                url = f"http://lewfer.pythonanywhere.com/add?username=bob&wind={wind}&solar={solar}"
+                start = time.time()
+                url = grid_url + f"/add?station={station_name}&wind={wind}&solar={solar}"
                 response = requests.get(url)
-                print(response.json())
+                end = time.time()
+                print("Time", end - start)
+                #print(response.json())
             else:
                 print("err")
         except ValueError:
             pass
+    
 
     # Display values on screen
     textLeft(screen, 10,10,f"Wind:{wind}")
