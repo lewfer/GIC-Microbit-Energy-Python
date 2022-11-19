@@ -31,16 +31,23 @@ import time
 dataWind = []
 dataSolar = []
 
+# Pygame window parameters
+windowWidth = 500
+windowHeight = 600
+
 # Object to connect to microbit
 microbit = Microbit(powerstation_serialport)
 microbit.connect()
 
 # Startup pygame window
 pygame.init()
-screen = pygame.display.set_mode([500, 500])
+screen = pygame.display.set_mode([windowWidth, windowHeight])
+pygame.display.set_caption('Power Station')
+icon = pygame.image.load('station.png')
+pygame.display.set_icon(icon)
 
 # Create objects on the screen
-b = Button (150,450,100,50, "Stop")
+#b = Button (150,450,100,50, "Stop")
 graph = Graph(100,100,300,300, screen)
 
 # Run until the user asks to quit
@@ -100,8 +107,8 @@ while running:
     
 
     # Display values on screen
-    textLeft(screen, 10,10,f"Wind:{wind}")
-    textLeft(screen, 10,30,f"Solar:{solar}")
+    textLeft(screen, 10, 10,f"Wind:{wind}")
+    textLeft(screen, 10, 35,f"Solar:{solar}")
 
     if c:
         text(screen, 150,450,"clicked")
@@ -112,7 +119,7 @@ while running:
     graph.plot(dataSolar, blue)
 
     # Draw button
-    b.draw(screen, True)
+    #b.draw(screen, True)
 
     #sleep(1)
 
