@@ -41,14 +41,19 @@ barheight = 30
 bargap = 2
 
 # Pygame colors
-DEVICE_ON = green
+DEVICE_ON = (31,219,43)
 DEVICE_OFF = grey
-DEVICE_NOPOWER = pygame.Color("cadetblue1")
-GAUGE_GOOD = green
-GAUGE_DANGER = yellow
-GAUGE_BAD = red
+DEVICE_NOPOWER = (173,219,188)
+#GAUGE_GOOD = (150,219,140)
+#GAUGE_DANGER = (242,214,143)
+#GAUGE_BAD = (235,120,123)
+GAUGE_GOOD = (178,219,192)
+GAUGE_DANGER = (245,237,201)
+GAUGE_BAD = (237,200,198)
 GAUGE_NODEMAND = grey
-GAUGE_BAR = white
+GAUGE_AVAILABLE = (235,71,0)
+GAUGE_NEEDED = (166,40,235)
+GAUGE_USED  = (50,49,245)
 
 # Object to connect to microbit via serial
 microbit = Microbit(house_serialport)
@@ -115,9 +120,15 @@ def listen():
 
 def getTotalEnergy():
     # Find out how much energy is available at the national grid
-    url = grid_url + "/gettotalenergy"
-    response = requests.get(url)
-    return int(response.json())
+    url = grid_url + "/getavailableenergy"
+    available = 0
+    try:
+        response = requests.get(url, timeout=5)
+        available = int(response.json())
+    except requests.exceptions.Timeout:
+        pass
+
+    return available
 
 def useEnergy(units):
     # Tell National Grid how much we used
@@ -160,7 +171,9 @@ icon = pygame.image.load('house.png')
 pygame.display.set_icon(icon)
 
 # Create objects on the screen
-graph = Graph(100,100+(barheight+bargap)*5+50,300,200, screen)
+indicatorsTop = 140 # y position where indicators start
+maxIndicators = 5
+graph = Graph(100,indicatorsTop+(barheight+bargap)*maxIndicators+50,300,200, screen)
 
 # Set a timer for how often to consume energy
 CONSUMEENERGY= pygame.USEREVENT + 1 
@@ -202,7 +215,8 @@ while running:
             maxEnergyNeeded,totalEnergyNeeded,totalEnergyUsed = getEnergyConsumption(totalEnergyAvailable)
 
             # Tell National Grid how much we used
-            useEnergy(int(totalEnergyUsed*consumptionRate))
+            if totalEnergyUsed>0:
+                useEnergy(int(totalEnergyUsed))
             
             # Log the data
             dataNeeded.append(totalEnergyNeeded) #/consumptionRate)
@@ -219,28 +233,30 @@ while running:
         pygame.draw.rect(screen, GAUGE_BAD, (10,10,maxBar/2,50))    
         pygame.draw.rect(screen, GAUGE_DANGER, (10+maxBar/2,10,maxBar/4,50))    
         pygame.draw.rect(screen, GAUGE_GOOD, (10+maxBar*3/4,10,maxBar/4,50))    
-        pygame.draw.rect(screen, GAUGE_BAR , (10,20,bar,30))   
+        pygame.draw.rect(screen, GAUGE_AVAILABLE , (10,20,bar,30))   
         if totalEnergyNeeded==0:
             pygame.draw.rect(screen, GAUGE_NODEMAND, (10,20,bar,30))  
-        pygame.draw.rect(screen, black, (10,20,neededBar,30), 2)
-        textLeft(screen, 10, 60, "Needed:"+str(totalEnergyNeeded) + " Avail:"+str(totalEnergyAvailable), 16)
+        pygame.draw.rect(screen, GAUGE_NEEDED, (10,20,neededBar,30), 2)
+        textLeft(screen, 10, 65, "Needed: "+str(totalEnergyNeeded), 16, GAUGE_NEEDED)
+        textLeft(screen, 10, 85, "Available: "+str(totalEnergyAvailable), 16, GAUGE_AVAILABLE)
+        textLeft(screen, 10, 105, "Used: "+str(totalEnergyUsed), 16, GAUGE_USED)
 
         #print(maxEnergyNeeded, totalEnergyNeeded, totalEnergyAvailable,totalEnergyUsed)
 
         # Plot graph of most recent values
         if maxEnergyNeeded>0:
             graph.axes(0,143,0,maxEnergyNeeded)
-            graph.plot(dataNeeded, blue)
-            graph.plot(dataUsed, red)        
+            graph.plot(dataNeeded, GAUGE_NEEDED)
+            graph.plot(dataUsed, GAUGE_USED)        
 
         # Draw devices indicators
         for i,device in enumerate(devices.values()):
             color = DEVICE_OFF if not device["on"] else DEVICE_ON if device["on"] and device["powered"] else DEVICE_NOPOWER
-            pygame.draw.rect(screen, color, (10,100+(barheight+bargap)*i,maxBar,barheight))
-            textLeft(screen, 10, 100+(barheight+bargap)*i,device["name"]+" "+str(device["power_needed"]))
+            pygame.draw.rect(screen, color, (10,indicatorsTop+(barheight+bargap)*i,maxBar,barheight))
+            textLeft(screen, 10, indicatorsTop+(barheight+bargap)*i,device["name"]+" "+str(device["power_needed"]))
 
         # Turn device on/off if clicked
-        clicked = (mousey-100)//(barheight+bargap)
+        clicked = (mousey-indicatorsTop)//(barheight+bargap)
         if clicked>=0 and clicked<=len(devices):
             devices[list(devices.keys())[clicked]]["on"] = 1-devices[list(devices.keys())[clicked]]["on"]
 
