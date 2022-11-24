@@ -95,9 +95,10 @@ class Graph():
             for i,d in enumerate(data):
                 x = map(i,self.x1, self.x2, self.yaxisMargin, self.rect.w-self.rightMargin) + self.rect.x
                 y = map(d, self.y1, self.y2, self.rect.h-self.xaxisMargin, self.topMargin) + self.rect.y
-                pygame.draw.circle(self.screen, color, (x, y), 1)
+                pygame.draw.circle(self.screen, color, (x, y), 2)
                 if (i>0):
-                    pygame.draw.line(self.screen, color, (px,py), (x,y)) 
+                    #pygame.draw.line(self.screen, color, (px,py), (x,y), width=2) 
+                    pygame.draw.aaline(self.screen, color, (px,py), (x,y)) 
                 px = x
                 py = y
 
