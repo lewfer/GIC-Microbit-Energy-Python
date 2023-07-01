@@ -103,9 +103,10 @@ def listen():
                 split = message.split("=")
                 device = devices[split[1]]
                 if device["on"] and device["powered"]:
-                    status = "1\n"
+                    status = device["name"] + "=1\n"
                 else:
-                    status = "0\n"
+                    status = device["name"] + "=0\n"
+                print(split[1], device,status)
                 microbit.write(status)
                 #print("Sending:",status)   
 
@@ -251,6 +252,7 @@ while running:
 
         # Draw devices indicators
         for i,device in enumerate(devices.values()):
+            #print(device)
             color = DEVICE_OFF if not device["on"] else DEVICE_ON if device["on"] and device["powered"] else DEVICE_NOPOWER
             pygame.draw.rect(screen, color, (10,indicatorsTop+(barheight+bargap)*i,maxBar,barheight))
             textLeft(screen, 10, indicatorsTop+(barheight+bargap)*i,device["name"]+" "+str(device["power_needed"]))

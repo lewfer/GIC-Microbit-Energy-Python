@@ -26,9 +26,9 @@ station_name = "Panda Power"
 # Serial ports to which microbit is attached
 # On Windows look this up in Device Manager.  E.g. 'COM4'
 # On Mac or Linux run 'ls /dev/tty*' from a terminal.  Use the full name, e.g. /dev/tty.usbmodel141302
-powerstation_serialport = "COM9"
+powerstation_serialport = "COM17"
 #powerstation_serialport = "/dev/ttyACM0"
-house_serialport = "COM5"
+house_serialport = "COM21"
 
 # How often to send to web service
 # Higher means less frequently
