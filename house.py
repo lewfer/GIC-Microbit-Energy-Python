@@ -106,7 +106,7 @@ def listen():
                     status = device["name"] + "=1\n"
                 else:
                     status = device["name"] + "=0\n"
-                print(split[1], device,status)
+                #print(split[1], device,status)
                 microbit.write(status)
                 #print("Sending:",status)   
 
@@ -133,7 +133,7 @@ def getTotalEnergy():
 
 def useEnergy(units):
     # Tell National Grid how much we used
-    print(totalEnergyUsed)
+    print("Energy used:", totalEnergyUsed)
     url = grid_url + f"/use?energy={units}"
     response = requests.get(url)
     #print(response.json())
