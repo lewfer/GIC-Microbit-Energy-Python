@@ -1,4 +1,4 @@
-""" 
+"""  
 house.py
 
 Interfaces between Microbit controlling the house and the web service (national grid).
