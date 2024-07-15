@@ -6,7 +6,7 @@ class Microbit():
 
     def connect(self):
         #self.serial = serial.Serial(self.serialport, 115200,  parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=10)
-        self.serial = serial.Serial(self.serialport, 9600,  parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE)
+        self.serial = serial.Serial(self.serialport, 9600,  parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=2)
 
 
 

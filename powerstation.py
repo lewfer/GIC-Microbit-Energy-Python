@@ -55,6 +55,7 @@ graph = Graph(50,120,400,420, screen)
 
 # Run until the user asks to quit
 running = True
+error = ""
 
 wind,solar,total = 0,0,0
 
@@ -106,13 +107,18 @@ while running:
                 solar_cache += solar
 
                 # Send to web service
-                if generation_count%send_frequency==0:
-                    start = time.time()
-                    url = grid_url + f"/add?station={station_name}&wind={wind_cache}&solar={solar_cache}"
-                    response = requests.get(url)
-                    end = time.time()
-                    print("Time", end - start, url)
-                    wind_cache, solar_cache = 0, 0 
+                try:
+                    if generation_count%send_frequency==0:
+                        start = time.time()
+                        url = grid_url + f"/add?station={station_name}&wind={wind_cache}&solar={solar_cache}"
+                        response = requests.get(url, timeout=2)
+                        end = time.time()
+                        print("Time", end - start, url)
+                        wind_cache, solar_cache = 0, 0 
+                        error = ""
+                except requests.ConnectTimeout:
+                    error = "Timeout sending to web service"
+                    pass
 
                 generation_count += 1
                 #print(response.json())
@@ -130,6 +136,10 @@ while running:
     if c:
         text(screen, 150,450,"clicked")
 
+    if error:
+        print(error)
+        textLeft(screen, 10,550,"Err:"+error, size=18, colour=red)
+        
     # Plot graph of most recent values
     graph.axes(0,143,0,1001)
     graph.plot(dataWind, COLOUR_WIND)

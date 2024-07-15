@@ -1,0 +1,1 @@
+powershell.exe -noexit -ExecutionPolicy Bypass -File "./list_com_ports.ps1" 

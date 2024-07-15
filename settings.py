@@ -7,7 +7,7 @@
 
 # URL for the national grid web service
 # Don't use 'localhost' here.  It can be painfully slow
-grid_url = "http://127.0.0.1:8000"
+grid_url = "http://192.168.1.10:8000"
 #grid_url = "http://lewfer.pythonanywhere.com"
 
 # Name of the power station
@@ -24,7 +24,7 @@ station_name = "Panda Power"
 #station_name = "Gazelle Green Energy"
 
 # Serial ports to which microbit is attached
-# On Windows look this up in Device Manager.  E.g. 'COM4'
+# On Windows look this up in Device Manager.  E.g. 'COM4' or use PowerShell command 'Get-WMIObject Win32_SerialPort'
 # On Mac or Linux run 'ls /dev/tty*' from a terminal.  Use the full name, e.g. /dev/tty.usbmodel141302
 powerstation_serialport = "COM17"
 #powerstation_serialport = "/dev/ttyACM0"
